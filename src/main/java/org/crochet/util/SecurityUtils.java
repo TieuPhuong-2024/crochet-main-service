@@ -1,0 +1,50 @@
+package org.crochet.util;
+
+import org.crochet.model.User;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+public class SecurityUtils {
+
+    private SecurityUtils() {
+        // Private constructor to prevent instantiation
+    }
+
+    /**
+     * Gets the currently authenticated user from the security context
+     *
+     * @return The authenticated User object, or null if no user is authenticated
+     */
+    public static User getCurrentUser() {
+        Authentication authentication = getAuthentication();
+        
+        if (isValidAuthentication(authentication)) {
+            User user = (User) authentication.getPrincipal();
+            return user;
+        }
+        
+        return null;
+    }
+
+    private static Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    private static boolean isValidAuthentication(Authentication authentication) {
+        boolean isValid = authentication != null
+                && authentication.isAuthenticated()
+                && !authentication.getPrincipal().equals("anonymousUser");
+        
+        
+        return isValid;
+    }
+
+    public static boolean hasRole(String role) {
+        Authentication authentication = getAuthentication();
+        if (!isValidAuthentication(authentication)) {
+            return false;
+        }
+        return authentication.getAuthorities().contains(new SimpleGrantedAuthority(role));
+    }
+}

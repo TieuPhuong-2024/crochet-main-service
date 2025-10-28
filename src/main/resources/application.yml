@@ -1,0 +1,94 @@
+spring:
+  profiles:
+    active: ${ENV:local}
+
+  threads:
+    virtual:
+      enabled: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${GOOGLE_CLIENT_ID}
+            clientSecret: ${GOOGLE_CLIENT_SECRET}
+            redirectUri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            scope:
+              - email
+              - profile
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL}
+    password: ${APP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics
+
+# Application configuration
+app:
+  auth:
+    tokenSecret: ${TOKEN_SECRET}
+    tokenExpirationMs: 259200000 # 3 days
+    refresh-token-expiration-ms: 604800000 # 1 week
+  oauth2:
+    authorizedRedirectUris:
+      - http://localhost:3000/oauth2/redirect
+      - https://www.tieuphuongcrochet.com/oauth2/redirect
+      - https://littlecrochet.web.app/oauth2/redirect
+      - https://littlecrochet.firebaseapp.com/oauth2/redirect
+
+# Authorization configuration
+authorize:
+  http-request:
+    allowedOrigins: ${ALLOWED_ORIGINS}
+
+# Firebase configuration
+firebase:
+  serviceAccountKey: ${SERVICE_ACCOUNT_KEY}
+
+# Resilience4j configuration
+resilience4j:
+  ratelimiter:
+    instances:
+      passwordResetRateLimiter:
+        limitForPeriod: 1
+        limitRefreshPeriod: 3m
+        timeoutDuration: 5s
+      resendEmail:
+        limitForPeriod: 3
+        limitRefreshPeriod: 1h
+        timeoutDuration: 0s
+  retry:
+    instances:
+      resendEmail:
+        maxAttempts: 3
+        waitDuration: 1s
+        retryExceptions:
+          - org.springframework.mail.MailException
+
+# Internal API configuration
+internal:
+  api:
+    key: ${INTERNAL_API_KEY:internal-api-key}
+
+# Blog service configuration
+blog-service:
+  url: ${BLOG_SERVICE_URL:http://localhost:8083}
+  
+server:
+  port: ${PORT:8081}
