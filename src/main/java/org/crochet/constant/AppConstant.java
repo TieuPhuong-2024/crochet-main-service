@@ -1,0 +1,11 @@
+package org.crochet.constant;
+
+public class AppConstant {
+    public static final String DEFAULT_PAGE_NUMBER = "0";
+    public static final String DEFAULT_PAGE_SIZE = "48";
+    public static final String DEFAULT_SORT_BY = "createdAt";
+    public static final String DEFAULT_SORT_DIRECTION = "desc";
+    public static final long MAX_AGE_SECS = 3600;
+    public static final String CROCHET_TASK_EXECUTOR = "crochetTaskExecutor";
+    public static final String SUCCESS = "Success";
+}
