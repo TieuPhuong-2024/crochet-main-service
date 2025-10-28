@@ -170,3 +170,6 @@ gradle-app.setting
 
 application-local.yml
 application-dev.yml
+.github/workflows/*.yml
+.kilocode/
+.kiro/specs/
